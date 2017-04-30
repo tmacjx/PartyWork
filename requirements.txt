@@ -7,3 +7,4 @@ Flask-WTF
 SQLAlchemy
 Flask-login
 Flask-admin
+Flask-email

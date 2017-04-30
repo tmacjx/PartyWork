@@ -9,7 +9,17 @@
     <h1>
         Login
     </h1>
+
 </div>
+
+
+    {% if current_user.is_authenticated %}
+        {{ current_user.username }}
+
+    {% else %}
+        Stranger
+
+    {% endif %}
 
 
 {% endblock %}

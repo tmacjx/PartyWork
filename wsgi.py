@@ -3,6 +3,10 @@
 Author:
 """
 
+import os
+
+os.environ['MODE'] = 'TESTING'
+
 from app import create_app
 
 if __name__ == "__main__":
