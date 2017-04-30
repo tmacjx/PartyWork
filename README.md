@@ -31,7 +31,7 @@ python manage.py shell
 
 >> admin = Role.query.get(name='Administrator')
 
->> user = User(username='root', email='root@qq.com', password='123456')
+>> user = User(username='root', email='root@qq.com', password='123456', role=admin)
 
 >> db.session.add(user)
 
