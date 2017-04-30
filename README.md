@@ -26,10 +26,15 @@ python manage.py upgrade
 初始化角色类型:  普通用户 管理员
 并新建一个管理员用户
 python manage.py shell
+
 >> Role.insert_role()
+
 >> admin = Role.query.get(name='Administrator')
+
 >> user = User(username='root', email='root@qq.com', password='123456')
+
 >> db.session.add(user)
+
 >> db.session.commit()
 
 后台管理路径
