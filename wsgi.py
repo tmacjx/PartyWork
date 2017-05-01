@@ -5,7 +5,7 @@ Author:
 
 import os
 
-os.environ['MODE'] = 'TESTING'
+# os.environ['MODE'] = 'TESTING'
 
 from app import create_app
 

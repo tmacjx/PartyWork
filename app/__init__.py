@@ -22,7 +22,10 @@ login_manager.login_view = 'auth.login'
 
 app = Flask(__name__)
 
-config_name = os.environ['MODE']
+
+config_name = 'default'
+
+# config_name = 'TESTING'
 
 app.config.from_object(config[config_name])
 
