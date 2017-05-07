@@ -1,0 +1,134 @@
+*{margin:0;padding:0;list-style: none;}
+	body{ 	background-color:#FCF5E1; }
+		#banner{
+			margin:0 auto;
+			width:1366px;
+			height:356px ;
+			background:url(../img/red.png) no-repeat ;
+			/*position:absolute;*/
+		} 
+		 
+		#folk{
+			display: block;
+			position:absolute;
+			left:30%;
+			top:20%; 
+		}
+		#banner h1{
+			color: white; 
+			position:absolute; 
+			left:35%;
+			top:18%; 
+			letter-spacing: 2px;
+		} 
+		#banner a{
+			font-size: 17px;
+			color:white;
+			text-decoration: none;
+			display: inline-block;
+			margin: 0 5px; 
+		}
+		#banner a:hover{
+			color: red;
+		}
+		#nav ul{
+			width:630px;
+			height:30px;
+			margin:-27px auto 0;
+			/*border: 1px solid blue;*/
+		}
+		#nav ul li{
+			list-style: none;
+			float: left; 
+		}
+		#nav ul li a{
+			color: red;
+			font-size:17px;
+			text-decoration: none; 
+			padding: 0 15px;
+			border-right:1px solid red;
+			display: block;
+			letter-spacing: 2px;
+		}
+		#nav ul li a:hover{
+			text-decoration: underline;
+		}
+		#main{
+			width:80%;
+			margin:0 auto;
+			height:500px; 
+		} 
+		#news{
+			height:370px;
+			margin:10px 0; 
+		}
+		.title{
+			height:30px; 
+			}
+		#slider{
+			width:43%;
+			height:300px;
+			margin:10px 1%;
+			padding:5px 2%;
+			float:left; 
+			border: 5px solid #F3C688;  
+			border-radius:5px;	
+		}
+		#right{
+			width:43%;
+			height:300px;
+			margin:5px 1% 10px; 
+			padding:5px 2%;
+			float:right;
+			/*border:3px solid #F3C688; */
+			
+		}
+		#right ul li{ display: block; line-height: 40px; }
+		#right ul li a{  text-decoration: none; color: #000000; }
+		#right ul li a:hover{color: red;text-decoration: underline;}
+		 
+		/*习近平同志重要讲话*/
+		#tiles{width:99%;padding:10px 0.5%;}
+		#tiles li{display:block;margin:15px 1%;float:left;width:30%;background-color:white;border-radius:10px;} 
+		#tiles li div.con{display:block; padding:20px 20px 10px 25px;}
+		#tiles li a{color: #000000;text-decoration: none; }
+		#tiles li a:hover{text-decoration: underline; }
+		#tiles .red{color: red;}
+		#tiles li h4{ display:inline-block; font:bold 18px/150%  \5FAE\8F6F\96C5\9ED1;font-size:1.5rem;}
+		#tiles li em{ display:inline-block; font:normal 12px/240% "SimSun"; font-size:1.2rem; color:#5f5f5f;}
+		#tiles li div.more{ text-align:right;}
+		#tiles li div.more img{ margin:0 20px 20px 0; float:right;}
+		
+		/*活动集锦*/
+		#act{width:99%;padding:10px 0.5%;}
+		#act li{display:block;margin:15px 1%;float:left;width:30%;background-color:white;border-radius:10px;} 
+		#act li p{display:block; padding:15px 15px 10px 25px;}
+		 .detail a{color: #000000;text-decoration: none;}
+		 .detail a:hover{color: red;text-decoration: underline;}
+		.bigimgstyle {
+		    width: 275px;
+		    position: relative;
+		    height: 160px;
+		    margin-bottom: 20px;
+		    overflow: hidden;
+		}  
+		.bigimgstyle span {
+		    display: inline-block;
+		    width: 100%;
+		    position: absolute;
+		    bottom: 0px;
+		    height: 35px;
+		    background-color: rgba(0,0,0,.5);
+		    text-align: center;
+		    line-height: 35px;
+		    font-size: 14px;
+		    color: #FFF;
+		    left: 0px;
+		}
+		.bigimgstyle span a { color: #FFF;text-decoration: none;}
+		
+		/*友情链接*/
+		.flink{ float:left;display: block;margin:10px 5%;width:12%;}
+		.flink li{list-style: none;display: block;line-height: 30px;;}
+		.flink li a{text-decoration: none;color: black;}
+		.flink li a:hover{text-decoration: none;color: red;}

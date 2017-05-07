@@ -8,3 +8,8 @@ SQLAlchemy
 Flask-login
 Flask-admin
 Flask-email
+Pillow
+flask-pagedown
+markdown
+bleach
+flask-moment

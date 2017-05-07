@@ -2,10 +2,13 @@ from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 from datetime import datetime
-from flask import current_app
+from flask import current_app, request
 from . import login_manager
 from flask import url_for
 from app import app
+import bleach
+from markdown import markdown
+import hashlib
 
 
 class Permission:
@@ -52,12 +55,17 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    name = db.Column(db.String(64), nullable=True)
     password_hash = db.Column(db.String(128))
     email = db.Column(db.String(64), unique=True, index=True)
+    about_me = db.Column(db.Text, nullable=True)
     # 注册时间
     member_since = db.Column(db.DateTime(), default=datetime.now)
     # 最后访问时间
     last_seen = db.Column(db.DateTime(), default=datetime.now)
+    # 头像hash值
+    avatar_hash = db.Column(db.String(32))
+    comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -92,6 +100,22 @@ class User(UserMixin, db.Model):
         self.last_seen = datetime.now()
         db.session.add(self)
 
+    def gravatar(self, size=100, default='identicon', rating='g'):
+        """
+        根据email的hash值，获取用户头像
+        :param size:
+        :param default:
+        :param rating:
+        :return:
+        """
+        if request.is_secure:
+            url = 'https://secure.gravatar.com/avatar'
+        else:
+            url = 'http://secure.gravatar.com/avatar'
+        hash = self.avatar_hash or hashlib.md5(self.email.encode('utf-8')).hexdigest()
+        return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(url=url, size=size, hash=hash,
+                                                                     default=default, rating=rating)
+
     def __repr__(self):
         return '<User %r>' % self.username
 
@@ -117,86 +141,186 @@ def load_user(user_id):
 # todo 可能存在 多个配图的情况 多对多？
 
 
-class Image(db.Model):
-    __tablename__ = 'images'
+# class Image(db.Model):
+#     __tablename__ = 'images'
+#     id = db.Column(db.Integer, primary_key=True)
+#     image = db.Column(db.String(255), nullable=False, default='')
+#
+#     @property
+#     def image_path(self):
+#         return '%s/%s' % (
+#                 app.config['MEDIA_PATH'], self.image)
+#
+#     @property
+#     def image_url(self):
+#         if not self.image:
+#             return None
+#
+#         return url_for('static', filename=self.image_path,
+#                        _external=True)
+
+
+# 实事要闻
+class CurrentNews(db.Model):
+    __tablename__ = 'current_news'
     id = db.Column(db.Integer, primary_key=True)
-    image = db.Column(db.String(255), nullable=False, default='')
+    title = db.Column(db.String(64), nullable=False)
+    content = db.Column(db.Text, nullable=True)
+    content_html = db.Column(db.Text, nullable=True)
+    create_time = db.Column(db.DateTime, default=datetime.now())
+    publish_time = db.Column(db.DateTime, default=datetime.now())
+    img_path = db.Column(db.String(256), nullable=True)
+
+    @staticmethod
+    def on_changed_content(target, value, oldvalue, initiator):
+        allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li',
+                      'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
+        target.content_html = bleach.linkify(bleach.clean(markdown(value, output='html'), tags=allow_tags, strip=True))
 
     @property
-    def image_path(self):
-        return '%s/%s' % (
-                app.config['MEDIA_PATH'], self.image)
+    def img_url(self):
+        if self.img_path:
+            return url_for('main.media', filename=self.img_path)
+        else:
+            return ''
+
+db.event.listen(CurrentNews.content, 'set', CurrentNews.on_changed_content)
+
+
+# 工作动态
+class WorkTrends(db.Model):
+    __tablename__ = 'work_trends'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64), nullable=False)
+    content = db.Column(db.Text, nullable=True)
+    content_html = db.Column(db.Text, nullable=True)
+    create_time = db.Column(db.DateTime, default=datetime.now())
+    publish_time = db.Column(db.DateTime, default=datetime.now())
+    img_path = db.Column(db.String(256), nullable=True)
 
     @property
-    def image_url(self):
-        if not self.image:
-            return None
+    def img_url(self):
+        if self.img_path:
+            return url_for('main.media', filename=self.img_path)
+        else:
+            return ''
 
-        return url_for('static', filename=self.image_path,
-                       _external=True)
+    @staticmethod
+    def on_changed_content(target, value, oldvalue, initiator):
+        allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li',
+                      'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
+        target.content_html = bleach.linkify(
+                bleach.clean(markdown(value, output='html'), tags=allow_tags, strip=True))
 
-
-
-
-
-
-#
-# # 实事要闻
-# class CurrentNews(db.Model):
-#     __tablename__ = 'current_news'
-#     title = db.Column(db.String(64), nullable=False)
-#     content = db.Column(db.text, nullable=True)
-#     create_time = db.Column(db.Time, default=datetime.now())
-#     publish_time = db.Column(db.Time, default=datetime.now())
-#
-#
-# # 工作动态
-# class WorkTrends(db.Model):
-#     __tablename__ = 'work_trends'
-#     title = db.Column(db.String(64), nullable=False)
-#     content = db.Column(db.text, nullable=True)
-#     create_time = db.Column(db.Time, default=datetime.now())
-#     publish_time = db.Column(db.Time, default=datetime.now())
-#
-#
-# # 学习内容
-# class LearnContent(db.Model):
-#     __tablename__ = 'learn_contents'
-#     # 分类 0: 重要文件 1:理论学习 2:报刊社论
-#     classtype = db.Column(db.Integer)
-#     # 学习方式 0: 视频学习 1: 专题学习
-#     learntype = db.Column(db.Integer)
-#     # 标题
-#     title = db.Column(db.String(64), nullable=False)
-#     # 内容
-#     content = db.Column(db.text, nullable=True)
-#     # 视频名称
-#     video_name = db.Column(db.String(64), default='')
-#     # 视频路径 todo 是否可以不存？？
-#     video_url = db.Column(db.String(64), default='')
-#     create_time = db.Column(db.Time, default=datetime.now())
-#     publish_time = db.Column(db.Time, default=datetime.now())
-#
-#
-# # 活动集锦
-# class Activity(db.Model):
-#     __tablename__ = 'activities'
-#     title = db.Column(db.String(64), nullable=False)
-#     content = db.Column(db.text, nullable=True)
-#     create_time = db.Column(db.Time, default=datetime.now())
-#     publish_time = db.Column(db.Time, default=datetime.now())
-#     # todo 是否支持图片上传
-#
-#
-# # 党员风采
-# class PartyMember(db.Model):
-#     __tablename__ = 'party_members'
-#     title = db.Column(db.String(64), nullable=False)
-#     content = db.Column(db.text, nullable=True)
-#     create_time = db.Column(db.Time, default=datetime.now())
-#     publish_time = db.Column(db.Time, default=datetime.now())
-#     # todo 是否支持图片上传？？
-#
+db.event.listen(WorkTrends.content, 'set', WorkTrends.on_changed_content)
 
 
-# todo 评论？？
+# 学习内容
+class LearnContent(db.Model):
+    __tablename__ = 'learn_contents'
+    id = db.Column(db.Integer, primary_key=True)
+    # 分类 0: 重要文件 1:理论学习 2:报刊社论
+    classtype = db.Column(db.Integer)
+    # 学习方式 0: 视频学习 1: 专题学习
+    learntype = db.Column(db.Integer)
+    # 标题
+    title = db.Column(db.String(64), nullable=False)
+    # 内容
+    content = db.Column(db.Text, nullable=True)
+    content_html = db.Column(db.Text, nullable=True)
+    # 视频名称
+    video_name = db.Column(db.String(256), default='')
+    # 视频路径 todo 是否可以不存？？
+    video_url = db.Column(db.String(256), default='')
+    create_time = db.Column(db.DateTime, default=datetime.now())
+    publish_time = db.Column(db.DateTime, default=datetime.now())
+
+    @staticmethod
+    def on_changed_content(target, value, oldvalue, initiator):
+        allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li',
+                      'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
+        target.content_html = bleach.linkify(bleach.clean(markdown(value, output='html'), tags=allow_tags, strip=True))
+
+
+db.event.listen(LearnContent.content, 'set', LearnContent.on_changed_content)
+
+
+# 活动集锦
+class Activity(db.Model):
+    __tablename__ = 'activities'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64), nullable=False)
+    content = db.Column(db.Text, nullable=True)
+    content_html = db.Column(db.Text, nullable=True)
+    create_time = db.Column(db.DateTime, default=datetime.now())
+    publish_time = db.Column(db.DateTime, default=datetime.now())
+    img_path = db.Column(db.String(256), nullable=True)
+
+    @property
+    def img_url(self):
+        if self.img_path:
+            return url_for('main.media', filename=self.img_path)
+        else:
+            return ''
+
+    @staticmethod
+    def on_changed_content(target, value, oldvalue, initiator):
+        allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li',
+                      'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
+        target.content_html = bleach.linkify(
+            bleach.clean(markdown(value, output='html'), tags=allow_tags, strip=True))
+
+
+db.event.listen(Activity.content, 'set', Activity.on_changed_content)
+
+
+# 党员风采
+class PartyMember(db.Model):
+    __tablename__ = 'party_members'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64), nullable=False)
+    content = db.Column(db.Text, nullable=True)
+    content_html = db.Column(db.Text, nullable=True)
+    create_time = db.Column(db.DateTime, default=datetime.now())
+    publish_time = db.Column(db.DateTime, default=datetime.now())
+    img_path = db.Column(db.String(256), nullable=True)
+
+    @property
+    def img_url(self):
+        if self.img_path:
+            return url_for('main.media', filename=self.img_path)
+        else:
+            return ''
+
+    @staticmethod
+    def on_changed_content(target, value, oldvalue, initiator):
+        allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li',
+                      'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
+        target.content_html = bleach.linkify(bleach.clean(markdown(value, output='html'), tags=allow_tags, strip=True))
+
+
+db.event.listen(PartyMember.content, 'set', PartyMember.on_changed_content)
+
+
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=True)
+    content_html = db.Column(db.Text, nullable=True)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
+    # 是否显示, 由管理员操作, False则不显示
+    disabled = db.Column(db.Boolean)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    # 评论对象的所对应在数据库中的表名， 比如party_members
+    object_type = db.Column(db.String(32))
+    # 评论对象的id
+    object_id = db.Column(db.Integer)
+
+    @staticmethod
+    def on_changed_content(target, value, oldvalue, initiator):
+        allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li',
+                      'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
+        target.content_html = bleach.linkify(
+            bleach.clean(markdown(value, output='html'), tags=allow_tags, strip=True))
+
+db.event.listen(Comment.content, 'set', Comment.on_changed_content)

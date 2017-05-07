@@ -28,7 +28,12 @@ class Config:
 
     PROJECT_PATH = basedir
 
-    MEDIA_PATH = '/media'
+    MEDIA_FOLDER = 'media'
+
+    MEDIA_PATH = os.path.join(PROJECT_PATH, MEDIA_FOLDER)
+
+    # 数据展示 分页
+    PER_PAGE = 2
 
     @staticmethod
     def init_app(app):
@@ -55,5 +60,16 @@ config = {
     'test': TestingConfig,
     'product': ProductConfig
 }
+
+
+def load_config():
+    """加载配置类"""
+    mode = os.environ.get('MODE')
+    if mode == 'PRODUCTION':
+        return config['product']
+    elif mode == 'TESTING':
+        return config['test']
+    else:
+        return config['default']
 
 

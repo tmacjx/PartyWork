@@ -1,17 +1,22 @@
 from flask import render_template, request, redirect, flash, url_for
 from . import auth
 from flask_login import login_user, logout_user
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm, ChangePasswordForm, EditProfileForm
 from app.models import User
 from flask_login import current_user, login_required
 from app import db
 
-# @auth.before_app_request
-# def before_request():
-#     if current_user.is_authenticated:
-#         current_user.ping()
-#         if not current_user.confirmed and request.endpoint[:5] != 'auth.':
-#             return redirect(url_for('auth.unconfirmed'))
+
+@auth.before_app_request
+def before_request():
+    """
+    记录最近登陆时间
+    :return:
+    """
+    if current_user.is_authenticated:
+        current_user.ping()
+        # if not current_user.confirmed and request.endpoint[:5] != 'auth.':
+        #     return redirect(url_for('auth.unconfirmed'))
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -48,6 +53,34 @@ def register():
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
+
+@auth.route('/change-password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        if current_user.verify_password(form.old_password.data):
+            current_user.password = form.password.data
+            db.session.add(current_user)
+            flash('Your password has been updated.')
+            return redirect(url_for('main.index'))
+        else:
+            flash('Invalid password.')
+    return render_template("auth/change_password.html", form=form)
+
+
+@auth.route('/edit-profile', methods=['GET', 'POST'])
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.name = form.name.data
+        current_user.about_me = form.about_me.data
+        db.session.add(current_user)
+        flash('Your profile has been updated')
+        return redirect(url_for('main.user', username=current_user.username))
+    form.name.data = current_user.name
+    form.about_me.data = current_user.about_me
+    return render_template('edit-profile.html', form=form)
 
 
 

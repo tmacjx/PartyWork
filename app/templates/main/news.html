@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
+{% block title %}Flasky{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+{#    <h1>Hello, {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Stranger{% endif %}!</h1>#}
+</div>
+
+{# 文章列表，只需要修改css就行 核心代码不要变#}
+<ul class="posts">
+    {% for post in posts %}
+    <li class="post">
+        <div class="post-content">
+            <div class="post-date">{{ post.publish_time }}</div>
+{#            <div class="post-author"><a href="{{ url_for('.user', username=post.author.username) }}">{{ post.author.username }}</a></div>#}
+
+            <div class="post-title"> <a href="{{ url_for('main.current_news_detail', pk=post.id) }}" > {{ post.title }}   </a> </div>
+
+
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+
+
+
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, 'main.current_news') }}
+</div>
+{% endif %}
+{% endblock %}

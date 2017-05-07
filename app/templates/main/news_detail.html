@@ -1,0 +1,62 @@
+</html>{%  extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
+{% block title %}  {% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+
+{# todo 展示 访问路径  #}
+
+</div>
+
+
+{# 文章详情 修改css就好，不要修改核心代码#}
+<ul class="posts">
+
+    <li class="post">
+        <div class="post-content">
+            <div class="post-date">{{ posts.publish_time }}</div>
+{#            <div class="post-author"><a href="{{ url_for('.user', username=post.author.username) }}">{{ post.author.username }}</a></div>#}
+
+            <div class="post-title">   {{ posts.title }}  </div>
+
+
+            <div class="post-body"><img src="{{ posts.img_url }}" > </a> </div>
+
+
+            <div class="post-body">
+
+                {% if posts.content_html %}
+                    <p>{{ posts.content_html|safe }}</p>
+                {% else %}
+                    <p>{{ posts.content|safe }}</p>
+                {% endif %}
+
+            </div>
+
+        </div>
+    </li>
+
+</ul>
+
+
+
+{#    todo  评论 权限检查  #}
+<h4 id="comments">Comments</h4>
+{#{% if current_user.can(Permission.COMMENT) %}#}
+<div class="comment-form">
+    {{ wtf.quick_form(form) }}
+</div>
+{#{% endif %}#}
+{% include '_comments.html' %}
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, 'main.current_news_detail', fragment='#comments', pk=posts.id) }}
+</div>
+{% endif %}
+
+
+{% endblock %}

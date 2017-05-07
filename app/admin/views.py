@@ -3,12 +3,18 @@ from wtforms.validators import DataRequired
 from flask_login import current_user
 from flask import redirect, url_for, request
 from wtforms.fields import PasswordField
+from flask_admin import form
+from app import config
+from jinja2 import Markup
+from flask_pagedown.fields import PageDownField
+
+
+MEDIA_PATH = config.MEDIA_PATH
 
 
 class AdminView(ModelView):
 
     def is_accessible(self):
-        # todo 必须是管理员身份，如何通过cmd生成一个 管理员？？
         return current_user.is_administrator
 
     def inaccessible_callback(self, name, **kwargs):
@@ -54,4 +60,50 @@ class UserView(AdminView):
         # Add a password field, naming it "password2" and labeling it "New Password".
         form.password = PasswordField(label='密码')
         return form
+
+
+# todo 文件名uuid？？
+class FileView(AdminView):
+    # Override form field to use Flask-Admin FileUploadField
+    form_overrides = {
+        'img_path': form.FileUploadField
+    }
+
+    # Pass additional parameters to 'path' to FileUploadField constructor
+    form_args = {
+        'img_path': {
+            'label': 'File',
+            'base_path': MEDIA_PATH,
+            'allow_overwrite': False
+        }
+    }
+    form_excluded_columns = ['content_html']
+
+
+# todo 编辑页面 图片路径 显示错误？？
+class ImageView(AdminView):
+
+    def _list_thumbnail(view, context, model, name):
+        if not model.img_path:
+            return ''
+
+        return Markup('<img src="%s">' % url_for('main.media',
+                                                 filename=model.img_path))
+    column_formatters = {
+        'img_path': _list_thumbnail
+    }
+
+    # Alternative way to contribute field is to override it completely.
+    # In this case, Flask-Admin won't attempt to merge various parameters for the field.
+    form_extra_fields = {
+        'img_path': form.ImageUploadField('Image', base_path=MEDIA_PATH),
+        'content': PageDownField(validators=[DataRequired()])
+    }
+
+    form_excluded_columns = ['content_html']
+
+
+
+
+
 
