@@ -1,7 +1,7 @@
-</html>{%  extends "base.html" %}
+{# 某个党员风采 #}
+{%  extends "base.html" %}
 
 {% import "bootstrap/wtf.html" as wtf %}
-{% import "_macros.html" as macros %}
 
 {% block title %}  {% endblock %}
 
@@ -53,7 +53,7 @@
 {% include '_comments.html' %}
 {% if pagination %}
 <div class="pagination">
-    {{ macros.pagination_widget(pagination, 'main.party_members_detail', fragment='#comments', id=posts.id) }}
+    {{ macros.pagination_widget(pagination, 'main.party_members_detail', fragment='#comments', id=posts[0].id) }}
 </div>
 {% endif %}
 
