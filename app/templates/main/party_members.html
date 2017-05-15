@@ -20,7 +20,13 @@
 
             <div class="post-title"> <a href="{{ url_for('main.party_members_detail', pk=post.id) }}" > {{ post.title }}   </a> </div>
 
-            <div class="post-body">{{ post.content }}</div>
+            <div class="post-body" style="border-top:1px solid #ecebeb;">
+
+                <img src="../../static/img/photo.png "  width="100px;" style="margin:0px 50px;">
+
+                {{ post.content }}
+
+            </div>
 
         </div>
     </li>

@@ -11,8 +11,10 @@
 {% endblock %}
 
 {% block navbar %}
-<div class="navbar navbar-inverse" role="navigation">
-    <div class="container">
+<div class="navbar navbar-inverse" role="navigation" style="background-color:#690000;height:60px;">
+    <img src="../static/img/folk.png" width="30px;" style="float:left;margin-left:62px;margin-top:13px;"/>
+    <div class="container" >
+
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -20,16 +22,17 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">计算机学院党务工作管理系统</a>
+
+            <a style="color:#fff ;"class="navbar-brand mytitle" href="{{ url_for('main.index') }}">计算机学院党务工作管理系统</a>
         </div>
         <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav" id="mynav">
                 <li>  <a href="/"> 首页 </a></li>
                 <li>  <a href="/news"> 实事要闻 </a></li>
                 <li>  <a href="/trends"> 工作动态 </a></li>
-                <li>  <a href="/"> 学习内容 </a></li>
                 <li>  <a href="/activities"> 活动集锦 </a></li>
                 <li>  <a href="/party_members"> 党员风采 </a></li>
+                 <li>  <a href="/"> 学习微平台 </a></li>
 
                 {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a></li>
@@ -47,7 +50,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ url_for('auth.change_password') }}">修改密码</a></li>
-                        <li><a href="{{ url_for('auth.logout') }}">登出</a></li>
+                        <li><a href="{{ url_for('auth.logout') }}">退出</a></li>
                     </ul>
                 </li>
                 {% else %}
@@ -62,7 +65,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container" >
+
     {% block page_content %}{% endblock %}
 </div>
 {% endblock %}

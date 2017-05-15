@@ -21,6 +21,7 @@ ul.posts li.post:hover {
 div.post-date {
     float: right;
 }
+
 div.post-author {
     font-weight: bold;
 }
@@ -28,12 +29,31 @@ div.post-thumbnail {
     position: absolute;
 }
 div.post-content {
-    margin-left: 48px;
+    margin-left:15px;
     min-height: 48px;
+    line-height:48px;
+    font-size:15px;
 }
+div.post-body{padding:25px;}
 div.pagination {
     width: 100%;
     text-align: right;
     padding: 0px;
     margin: 0px;
 }
+
+
+
+/*my code*/
+
+#mynav li a{
+    display:block;
+    height:60px;
+    width:86px;
+    line-height:60px;
+    text-align:center;
+    color:#fff;
+    padding:0  ;
+}
+#mynav li a:hover{background-color:darkred;}
+

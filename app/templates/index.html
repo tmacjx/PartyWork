@@ -7,14 +7,19 @@
 {% block title %} Login {% endblock %}
 
 {% block page_content %}
-<div class="page-header">
-    <h1>
-        Login
-    </h1>
+<!--<div class="page-header">-->
+    <!--<h1>-->
+        <!--Login-->
+    <!--</h1>-->
 
+<!--</div>-->
+<div style="height:50px;background-color:blue;">
+    <img src="../static/img/bg_img.jpg" width="100%"/>
 </div>
+{#    首页 要展示哪些东西？？
 
-{#    首页 要展示哪些东西？？  #}
+      首页只展示一张图片即可，基本浏览功能就是导航栏中的几个部分
+#}
 
     {% if current_user.is_authenticated %}
         {{ current_user.username }}

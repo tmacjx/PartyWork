@@ -3,6 +3,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% import "_macros.html" as macros %}
 
+
 {% block title %}Flasky{% endblock %}
 
 {% block page_content %}
@@ -18,7 +19,7 @@
             <div class="post-date">{{ post.publish_time }}</div>
 {#            <div class="post-author"><a href="{{ url_for('.user', username=post.author.username) }}">{{ post.author.username }}</a></div>#}
 
-            <div class="post-title"> <a href="{{ url_for('main.current_news_detail', pk=post.id) }}" > {{ post.title }}   </a> </div>
+            <div class="post-title mylist_title"> <a href="{{ url_for('main.current_news_detail', pk=post.id) }}" > {{ post.title }}   </a> </div>
 
 
         </div>
