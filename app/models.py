@@ -241,6 +241,24 @@ class LearnContent(db.Model):
                       'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
         target.content_html = bleach.linkify(bleach.clean(markdown(value, output='html'), tags=allow_tags, strip=True))
 
+    @classmethod
+    def _names(cls):
+        return [key for key in cls.__dict__.keys() if not key.startswith("_")]
+
+    def _pack_data(self, isall=False):
+        """
+        将数据封装打包成字典格式
+        :return:
+        """
+        result = {}
+        for name in self._names():
+            value = getattr(self, name)
+            if name in ('create_time', 'publish_time'):
+                if isinstance(value, datetime):
+                    value = value.strftime("%Y-%m-%d")
+            result[name] = value
+        return result
+
 
 db.event.listen(LearnContent.content, 'set', LearnContent.on_changed_content)
 

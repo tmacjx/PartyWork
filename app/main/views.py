@@ -1,7 +1,7 @@
 from flask import render_template, session, redirect, url_for
 from . import main
 from .. import db
-from flask import request
+from flask import request, jsonify
 from app.models import User, Role, CurrentNews, WorkTrends, Activity, PartyMember, LearnContent, Comment
 from flask import current_app
 from flask import abort, flash
@@ -17,7 +17,14 @@ def index():
     首页
     :return:
     """
-    return render_template('index.html')
+    # 时事要闻 8条
+    news = CurrentNews.query.order_by(CurrentNews.publish_time).limit(8).all()
+
+    work_trends = WorkTrends.query.order_by(WorkTrends.publish_time).limit(8).all()
+
+    activity = Activity.query.order_by(Activity.publish_time).limit(8).all()
+
+    return render_template('index.html', current_news=news, work_trends=work_trends, activity=activity)
 
 
 @main.route('/user/<username>')
@@ -224,6 +231,83 @@ def party_members_detail(pk):
     comments = pagination.items
     return render_template('main/party_members_detail.html', posts=post, form=form, comments=comments,
                            pagination=pagination)
+
+
+@main.route('/learn_content', methods=['GET'])
+def learn_content():
+    """
+    学习内容
+    :param pk:
+    :return:
+    """
+    return render_template('/main/learn_content.html')
+
+
+# 分类 0: 重要文件 1:理论学习 2:报刊社论
+@main.route('/important_file_video', methods=['GET'])
+def important_file_video():
+    """
+    重要文件 video形式
+    :return: json
+    """
+    data = LearnContent.order_by(CurrentNews.publish_time).limit(4).filter_by(classtype=0, learntype=0)
+    result = {'data': data._pack_data(), 'result': 'OK'}
+    return jsonify(result)
+
+
+@main.route('/important_file_text', methods=['GET'])
+def important_file_text():
+    """
+    重要文件 文本形式
+    :return: json
+    """
+    data = LearnContent.order_by(CurrentNews.publish_time).limit(4).filter_by(classtype=0, learntype=1)
+    result = {'data': data._pack_data(), 'result': 'OK'}
+    return jsonify(result)
+
+
+@main.route('/theory_video', methods=['GET'])
+def theory_video():
+    """
+    理论学习 video形式
+    :return: json
+    """
+    data = LearnContent.order_by(CurrentNews.publish_time).limit(4).filter_by(classtype=1, learntype=0)
+    result = {'data': data._pack_data(), 'result': 'OK'}
+    return jsonify(result)
+
+
+@main.route('/theory_text', methods=['GET'])
+def theory_text():
+    """
+    理论学习 文本形式
+    :return: json
+    """
+    data = LearnContent.order_by(CurrentNews.publish_time).limit(4).filter_by(classtype=1, learntype=1)
+    result = {'data': data._pack_data(), 'result': 'OK'}
+    return jsonify(result)
+
+
+@main.route('/paper_video', methods=['GET'])
+def paper_video():
+    """
+    报刊社论 video形式
+    :return: json
+    """
+    data = LearnContent.order_by(CurrentNews.publish_time).limit(4).filter_by(classtype=2, learntype=0)
+    result = {'data': data._pack_data(), 'result': 'OK'}
+    return jsonify(result)
+
+
+@main.route('/paper_text', methods=['GET'])
+def paper_text():
+    """
+    报刊社论 文本形式
+    :return: json
+    """
+    data = LearnContent.order_by(CurrentNews.publish_time).limit(4).filter_by(classtype=2, learntype=1)
+    result = {'data': data._pack_data(), 'result': 'OK'}
+    return jsonify(result)
 
 
 
