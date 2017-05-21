@@ -33,13 +33,19 @@
 
 {# todo 这里展示首页内容  显示排版需要自己修改 #}
 
+    {#  todo 实事要闻 #}
     {% for post in current_news %}
 
+        {# 标题#}
         {{ post.title }}
 
+        {# 内容 只限制40个字 #}
         {{ post.content | truncate(40) }}
 
     {% endfor %}
+
+
+    {#  todo 工作动态 #}
 
 
     {% for post in work_trends %}
@@ -49,6 +55,8 @@
         {{ post.content | truncate(40) }}
 
     {% endfor %}
+
+    {#  todo 活动集锦 #}
 
 
     {% for post in activity %}
