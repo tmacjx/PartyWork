@@ -9,6 +9,8 @@ from app import app
 import bleach
 from markdown import markdown
 import hashlib
+import os
+from app import config
 
 
 class Permission:
@@ -235,11 +237,11 @@ class LearnContent(db.Model):
     create_time = db.Column(db.DateTime, default=datetime.now())
     publish_time = db.Column(db.DateTime, default=datetime.now())
 
-    @staticmethod
-    def on_changed_content(target, value, oldvalue, initiator):
-        allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li',
-                      'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
-        target.content_html = bleach.linkify(bleach.clean(markdown(value, output='html'), tags=allow_tags, strip=True))
+    # @staticmethod
+    # def on_changed_content(target, value, oldvalue, initiator):
+    #     allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li',
+    #                   'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
+    #     target.content_html = bleach.linkify(bleach.clean(markdown(value, output='html'), tags=allow_tags, strip=True))
 
     @classmethod
     def _names(cls):
@@ -257,10 +259,11 @@ class LearnContent(db.Model):
                 if isinstance(value, datetime):
                     value = value.strftime("%Y-%m-%d")
             result[name] = value
+        result['video_path'] = os.path.join('media', self.video_name)
         return result
 
 
-db.event.listen(LearnContent.content, 'set', LearnContent.on_changed_content)
+# db.event.listen(LearnContent.content, 'set', LearnContent.on_changed_content)
 
 
 # 活动集锦

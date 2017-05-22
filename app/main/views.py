@@ -250,8 +250,8 @@ def important_file_video():
     重要文件 video形式
     :return: json
     """
-    data = LearnContent.order_by(CurrentNews.publish_time).limit(4).filter_by(classtype=0, learntype=0)
-    result = {'data': data._pack_data(), 'result': 'OK'}
+    data = LearnContent.query.filter_by(classtype=0, learntype=0).order_by(LearnContent.publish_time).limit(4)
+    result = {'data': [i._pack_data() for i in data], 'result': 'OK'}
     return jsonify(result)
 
 
@@ -261,8 +261,8 @@ def important_file_text():
     重要文件 文本形式
     :return: json
     """
-    data = LearnContent.order_by(CurrentNews.publish_time).limit(4).filter_by(classtype=0, learntype=1)
-    result = {'data': data._pack_data(), 'result': 'OK'}
+    data = LearnContent.query.filter_by(classtype=0, learntype=1).order_by(LearnContent.publish_time).limit(4)
+    result = {'data': [i._pack_data() for i in data], 'result': 'OK'}
     return jsonify(result)
 
 
@@ -272,8 +272,8 @@ def theory_video():
     理论学习 video形式
     :return: json
     """
-    data = LearnContent.order_by(CurrentNews.publish_time).limit(4).filter_by(classtype=1, learntype=0)
-    result = {'data': data._pack_data(), 'result': 'OK'}
+    data = LearnContent.query.filter_by(classtype=1, learntype=0).order_by(LearnContent.publish_time).limit(4)
+    result = {'data': [i._pack_data() for i in data], 'result': 'OK'}
     return jsonify(result)
 
 
@@ -283,8 +283,8 @@ def theory_text():
     理论学习 文本形式
     :return: json
     """
-    data = LearnContent.order_by(CurrentNews.publish_time).limit(4).filter_by(classtype=1, learntype=1)
-    result = {'data': data._pack_data(), 'result': 'OK'}
+    data = LearnContent.query.filter_by(classtype=1, learntype=1).order_by(LearnContent.publish_time).limit(4)
+    result = {'data': [i._pack_data() for i in data], 'result': 'OK'}
     return jsonify(result)
 
 
@@ -294,8 +294,8 @@ def paper_video():
     报刊社论 video形式
     :return: json
     """
-    data = LearnContent.order_by(CurrentNews.publish_time).limit(4).filter_by(classtype=2, learntype=0)
-    result = {'data': data._pack_data(), 'result': 'OK'}
+    data = LearnContent.query.filter_by(classtype=2, learntype=0).order_by(LearnContent.publish_time).limit(4)
+    result = {'data': [i._pack_data() for i in data], 'result': 'OK'}
     return jsonify(result)
 
 
@@ -305,8 +305,8 @@ def paper_text():
     报刊社论 文本形式
     :return: json
     """
-    data = LearnContent.order_by(CurrentNews.publish_time).limit(4).filter_by(classtype=2, learntype=1)
-    result = {'data': data._pack_data(), 'result': 'OK'}
+    data = LearnContent.query.filter_by(classtype=2, learntype=1).order_by(LearnContent.publish_time).limit(4)
+    result = {'data': [i._pack_data() for i in data], 'result': 'OK'}
     return jsonify(result)
 
 

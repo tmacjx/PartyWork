@@ -65,19 +65,23 @@ class UserView(AdminView):
 # todo 文件名uuid？？
 class FileView(AdminView):
     # Override form field to use Flask-Admin FileUploadField
-    form_overrides = {
-        'img_path': form.FileUploadField
-    }
+    # form_overrides = {
+    #     'video_name': form.FileUploadField('File')
+    # }
 
     # Pass additional parameters to 'path' to FileUploadField constructor
-    form_args = {
-        'img_path': {
-            'label': 'File',
-            'base_path': MEDIA_PATH,
-            'allow_overwrite': False
-        }
+    # form_args = {
+    #     'img_path': {
+    #         'label': 'File',
+    #         'base_path': MEDIA_PATH,
+    #         'allow_overwrite': False
+    #     }
+    # }
+
+    form_extra_fields = {
+        'video_name': form.FileUploadField('File', base_path=MEDIA_PATH),
     }
-    form_excluded_columns = ['content_html']
+    form_excluded_columns = ['video_url', 'content_html']
 
 
 # todo 编辑页面 图片路径 显示错误？？

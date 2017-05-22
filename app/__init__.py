@@ -37,7 +37,7 @@ def create_app():
 
     from .models import Role, User, CurrentNews, WorkTrends, Activity, PartyMember, LearnContent
     # import app.admin.views as app_Admin
-    from app.admin.views import RoleView, UserView, ImageView
+    from app.admin.views import RoleView, UserView, ImageView, FileView
 
     # app = Flask(__name__)
     bootstrap.init_app(app)
@@ -55,6 +55,8 @@ def create_app():
     f_admin.add_view(ImageView(WorkTrends, db.session))
     f_admin.add_view(ImageView(Activity, db.session))
     f_admin.add_view(ImageView(PartyMember, db.session))
+
+    f_admin.add_view(FileView(LearnContent, db.session))
 
     from .main import main as main_blueprint
 
