@@ -221,7 +221,7 @@ db.event.listen(WorkTrends.content, 'set', WorkTrends.on_changed_content)
 class LearnContent(db.Model):
     __tablename__ = 'learn_contents'
     id = db.Column(db.Integer, primary_key=True)
-    # 分类 0: 重要文件 1:理论学习 2:报刊社论
+    # 分类 0: 重要文件 1: 理论学习 2: 报刊社论
     classtype = db.Column(db.Integer)
     # 学习方式 0: 视频学习 1: 专题学习
     learntype = db.Column(db.Integer)
