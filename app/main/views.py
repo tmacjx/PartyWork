@@ -18,13 +18,14 @@ def index():
     :return:
     """
     # 时事要闻 8条
-    news = CurrentNews.query.order_by(CurrentNews.publish_time).limit(8).all()
+    # news = CurrentNews.query.order_by(CurrentNews.publish_time).limit(8).all()
+    #
+    # work_trends = WorkTrends.query.order_by(WorkTrends.publish_time).limit(8).all()
+    #
+    # activity = Activity.query.order_by(Activity.publish_time).limit(8).all()
 
-    work_trends = WorkTrends.query.order_by(WorkTrends.publish_time).limit(8).all()
-
-    activity = Activity.query.order_by(Activity.publish_time).limit(8).all()
-
-    return render_template('index.html', current_news=news, work_trends=work_trends, activity=activity)
+    # return render_template('index.html', current_news=news, work_trends=work_trends, activity=activity)
+    return render_template('index.html')
 
 
 @main.route('/user/<username>')
