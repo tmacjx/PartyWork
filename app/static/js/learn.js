@@ -129,6 +129,7 @@ function show_paper_text(data){
 }
 
 
+// 重要文件 视频
 function get_important_file_video(){
   $.ajax({
         url: '/important_file_video',
@@ -151,7 +152,7 @@ function get_important_file_video(){
 }
 
 
-
+// 重要文件 文本
 function get_important_file_text(){
   $.ajax({
         url: '/important_file_text',
@@ -173,7 +174,7 @@ function get_important_file_text(){
     });
 }
 
-
+// 理论学习 视频
 function get_theory_video(){
   $.ajax({
         url: '/theory_video',
@@ -195,7 +196,7 @@ function get_theory_video(){
     });
 }
 
-
+// 理论学习 文本
 function get_theory_text(){
   $.ajax({
         url: '/theory_text',
@@ -217,7 +218,7 @@ function get_theory_text(){
     });
 }
 
-
+// 报刊社论 视频
 function get_paper_video(){
   $.ajax({
         url: '/paper_video',
@@ -238,7 +239,7 @@ function get_paper_video(){
     });
 }
 
-
+// 报刊社论 文本
 function get_paper_text(){
   $.ajax({
         url: '/paper_text',
