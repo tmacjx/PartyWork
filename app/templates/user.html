@@ -22,7 +22,10 @@
         <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
         {% endif %}
         {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-        <p>Member since {{ moment(user.member_since).format('L') }}. Last seen {{ moment(user.last_seen).fromNow() }}.</p>
+{#        <p>Member since {{ moment(user.member_since).format('L') }}. Last seen {{ moment(user.last_seen).fromNow() }}.</p>#}
+            <p> 学分: {{ user.score }} </p>
+
+
 {#        <p>{{ user.posts.count() }} blog posts.</p>#}
         <p>
             {% if user == current_user %}

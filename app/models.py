@@ -68,6 +68,7 @@ class User(UserMixin, db.Model):
     # 头像hash值
     avatar_hash = db.Column(db.String(32))
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
+    score = db.Column(db.Integer, default=0)
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -100,6 +101,7 @@ class User(UserMixin, db.Model):
 
     def ping(self):
         self.last_seen = datetime.now()
+        self.score += 10
         db.session.add(self)
 
     def gravatar(self, size=100, default='identicon', rating='g'):

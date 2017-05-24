@@ -33,7 +33,7 @@ class Config:
     MEDIA_PATH = os.path.join(PROJECT_PATH, MEDIA_FOLDER)
 
     # 数据展示 分页
-    PER_PAGE = 2
+    PER_PAGE = 10
 
     @staticmethod
     def init_app(app):
